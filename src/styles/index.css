@@ -1,0 +1,31 @@
+@import "_tailwind.css";
+
+#root,
+html,
+body {
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  background-color: #F1F5F9;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+/* ------ */
