@@ -1,29 +1,29 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import Layout from '../Layout';
 import Button from '@mui/material/Button';
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { RootState } from '../../app/store';
-// import { getTimeAsync } from '../../app/reducer';
-// import { gsap } from "gsap";
+import Swal from 'sweetalert2'
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface Todo {
     id: number;
     text: string;
     completed: boolean;
     time: string | null;
+    searchValue: string;
 }
 
 export default function Home() {
-    // const dispatch = useDispatch();
-    // const { loading, data, error } = useSelector((state: RootState) => state.time);
-
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [todos, setTodos] = useState<Todo[]>([]);
     const [inputText, setInputText] = useState<string>('');
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [searchValueText, setSearchValueText] = useState("");
     // const tl = gsap.timeline();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,13 +39,18 @@ export default function Home() {
                     todo.id === editingId ? { ...todo, text: inputText } : todo
                 );
                 setTimeout(() => {
+                    Swal.fire({
+                        title: "Update!",
+                        text: "Your task has been update.",
+                        icon: "success"
+                    });
                     setTodos(updatedTodos);
                 }, 2000);
                 setEditingId(null);
             } else {
                 // Add new todo
                 try {
-                    // Fetch API waktu
+                    // Fetch API Time
                     const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
                     const time = response.data.datetime;
                     const regexTime = /(\d{2}:\d{2}:\d{2})/;
@@ -55,6 +60,7 @@ export default function Home() {
                         text: inputText,
                         completed: false,
                         time: getTime[1],
+                        searchValue: searchValueText,
                     };
                     setTimeout(() => {
                         setTodos([...todos, newTodo]);
@@ -70,6 +76,7 @@ export default function Home() {
             }
 
             setInputText('');
+
             setTimeout(() => {
                 setIsLoading(false);
             }, 2000);
@@ -78,7 +85,25 @@ export default function Home() {
 
     const handleDeleteTodo = (id: number) => {
         const updatedTodos = todos.filter(todo => todo.id !== id);
-        setTodos(updatedTodos);
+
+        Swal.fire({
+            title: "Are you sure you want to Delete?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setTodos(updatedTodos);
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your task has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
     };
 
     const handleEditTodo = (id: number, text: string) => {
@@ -93,9 +118,18 @@ export default function Home() {
         setTodos(updatedTodos);
     };
 
-    // useEffect(() => {
-    //     dispatch(getTimeAsync());
-    // }, [dispatch])
+    const searchHandlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchValueText(e.target.value)
+    }
+
+    const filteredData = todos.filter((el) => {
+        if (searchValueText === '') {
+            return el;
+        }
+        else {
+            return el.text.toLowerCase().includes(searchValueText)
+        }
+    })
 
     return (
         <Layout>
@@ -115,10 +149,28 @@ export default function Home() {
                     </Button>
                 </div>
 
+                <div className="flex justify-end">
+                    <Paper
+                        component="form"
+                        sx={{ display: 'flex', alignItems: 'right', alignSelf: 'right' }}
+                        className='mb-5 !shadow-sm !rounded-full !px-2 !py-1 !w-[2.7rem] hover:!w-[10rem] !transition-all !duration-1000 !relative'
+                    >
+                        <InputBase
+                            sx={{ ml: 1, flex: 1 }}
+                            placeholder="Search Task"
+                            className='!pr-8 !text-wrap'
+                            onChange={searchHandlerChange}
+                        />
+                        <IconButton type="button" className='!absolute !top-0 !right-0 !bg-white' aria-label="search">
+                            <SearchIcon />
+                        </IconButton>
+                    </Paper>
+                </div>
+
                 <div className="bg-white px-4 py-5 rounded-xl">
                     <ul className='grid gap-2'>
-                        {todos.map(todo => (
-                            <li key={todo.id} className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
+                        {filteredData.map((todo, index) => (
+                            <li key={index} className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
                                 <input className='!border-red-500 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
 
                                 <p>
