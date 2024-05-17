@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Layout from '../Layout';
 import Button from '@mui/material/Button';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Todo {
     id: number;
@@ -78,18 +80,20 @@ export default function Home() {
                 <div className="bg-white px-4 py-5 rounded-xl">
                     <ul className='grid gap-2'>
                         {todos.map(todo => (
-                            <li key={todo.id} className='flex justify-between bg-slate-200 rounded-full px-4 py-2'>
-                                <button onClick={() => handleToggleComplete(todo.id)}>
-                                    {todo.completed ? 'Mark Incomplete' : 'Mark Complete'}
-                                </button>
+                            <li key={todo.id} className={`${todo.completed ? 'opacity-50' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
+                                <input className='!border-red-500 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
 
-                                <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                                <span className={`font-extrabold`}>
                                     {todo.text}
                                 </span>
 
-                                <div className="">
-                                    <button onClick={() => handleEditTodo(todo.id, todo.text)}>Edit</button>
-                                    <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
+                                <div className={`${todo.completed ? 'pointer-events-none' : ''}`}>
+                                    <button onClick={() => handleEditTodo(todo.id, todo.text)}>
+                                        <CreateIcon sx={{fontSize: '1rem'}} />
+                                    </button>
+                                    <button onClick={() => handleDeleteTodo(todo.id)}>
+                                        <DeleteIcon sx={{fontSize: '1rem'}} />
+                                    </button>
                                 </div>
                             </li>
                         ))}
