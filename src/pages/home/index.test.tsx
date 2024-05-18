@@ -1,6 +1,7 @@
 import Home from "./index";
 import { screen, render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from 'react';
 
 describe("Home component", () => {
     it('renders input field and add button', () => {
@@ -13,98 +14,99 @@ describe("Home component", () => {
         expect(addButton).toBeInTheDocument();
     });
 
-    // it('allows user to add todo', async () => {
-    //     render(<Home />);
+    it('allows user to add todo', async () => {
+        render(<Home />);
 
-    //     const inputField = screen.getByPlaceholderText(/Add note/i);
-    //     const addButton = screen.getByRole('button', { name: /add/i });
-    //     const newTodoText = 'New Todo';
-    //     const initialLiElements = screen.getAllByRole('listitem').length;
+        const inputField = screen.getByPlaceholderText(/Add note/i);
+        const addButton = screen.getByRole('button', { name: /add/i });
 
-    //     userEvent.type(inputField, newTodoText);
-    //     fireEvent.click(addButton);
+        await waitFor(() => {
+            expect(screen.queryByText('New Task Tester')).not.toBeInTheDocument();
+        });
 
-    //     // const newTodoElement = await screen.findByText(newTodoText);
+        fireEvent.change(inputField, { target: { value: 'New Task Tester' } });
+        fireEvent.click(addButton);
 
-    //     // expect(newTodoElement).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('New Task Tester')).toBeInTheDocument();
+        }, { timeout: 5000 });
+    });
 
-    //     await waitFor(() => {
-    //         // Menghitung jumlah elemen <li> setelah menambahkan todo baru
-    //         const updatedLiElements = screen.getAllByRole('listitem').length;
+    it('allows user to edit todo', async () => {
+        render(<Home />);
 
-    //         // Memastikan jumlah elemen <li> bertambah setelah menambahkan todo baru
-    //         expect(updatedLiElements).toBe(initialLiElements + 1);
+        const inputField = screen.getByPlaceholderText(/Add note/i);
+        const addButton = screen.getByRole('button', { name: /add/i });
 
-    //         // Memastikan bahwa elemen dengan teks todo baru muncul dalam daftar
-    //         expect(screen.getByText(newTodoText)).toBeInTheDocument();
-    //     });
-    // });
+        await waitFor(() => {
+            expect(screen.queryByText('New Task Tester')).not.toBeInTheDocument();
+        });
+
+        fireEvent.change(inputField, { target: { value: 'New Task Tester' } });
+        fireEvent.click(addButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('New Task Tester')).toBeInTheDocument();
+        }, { timeout: 5000 });
+
+        await waitFor(() => {
+            const editButton = screen.getByRole('button', { name: /edit/i });
+            fireEvent.click(editButton);
+        }, { timeout: 6000 })
+
+        userEvent.clear(screen.getByPlaceholderText(/Add note/i));
+        const updatedText = 'Updated New Task Tester';
+        userEvent.type(screen.getByPlaceholderText(/Add note/i), updatedText);
+        fireEvent.click(screen.getByRole('button', { name: /update/i }));
+    });
 
     test('allows user to delete todo', async () => {
         render(<Home />);
 
-        const deleteButton = await screen.findByRole('button', { name: /delete/i });
-        fireEvent.click(deleteButton);
+        const inputField = screen.getByPlaceholderText(/Add note/i);
+        const addButton = screen.getByRole('button', { name: /add/i });
 
         await waitFor(() => {
-            expect(deleteButton).not.toBeInTheDocument();
+            expect(screen.queryByText('New Task Tester')).not.toBeInTheDocument();
+        });
+
+        await act(async () => {
+            fireEvent.change(inputField, { target: { value: 'New Task Tester' } });
+            fireEvent.click(addButton);
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText('New Task Tester')).toBeInTheDocument();
+        }, { timeout: 5000 });
+
+        const deleteButton = screen.getByRole('button', { name: /delete/i });
+
+        await act(async () => {
+            fireEvent.click(deleteButton);
         });
     });
 
-    // test('allows user to edit todo', async () => {
-    //     render(<Home />);
-    //     const editButton = await screen.findByRole('button', { name: /edit/i });
-    //     fireEvent.click(editButton);
-    //     const updatedText = 'Updated Todo';
-    //     userEvent.clear(screen.getByPlaceholderText(/Add note/i));
-    //     userEvent.type(screen.getByPlaceholderText(/Add note/i), updatedText);
-    //     fireEvent.click(screen.getByRole('button', { name: /update/i }));
-    //     await waitFor(() => {
-    //         const updatedTodoElement = screen.getByText((content, element) => {
-    //             return element?.textContent === updatedText;
-    //         });
-    //         expect(updatedTodoElement).toBeInTheDocument();
-    //     });
-    // });
+    test('allows user to search todos', async () => {
+        render(<Home />);
 
-    // test('allows user to search todos', async () => {
-    //     render(<Home />);
-    //     const searchInput = screen.getByPlaceholderText(/search task/i);
-    //     userEvent.type(searchInput, 'New Todo');
-    //     const newTodo = await screen.findByText((content, element) => {
-    //         return element?.textContent?.includes('New Todo');
-    //     });
-    //     expect(newTodo).toBeInTheDocument();
-    // });
+        const inputField = screen.getByPlaceholderText(/Add note/i);
+        const addButton = screen.getByRole('button', { name: /add/i });
 
-    // => test syntax
-    // it("when input task is empty, button not working", async () => {
-    //     render(<Home />)
+        await waitFor(() => {
+            expect(screen.queryByText('New Task Tester')).not.toBeInTheDocument();
+        });
 
-    //     const buttonEl = screen.getByRole("button", { name: /add/i })
+        fireEvent.change(inputField, { target: { value: 'New Task Tester' } });
+        fireEvent.click(addButton);
 
-    //     expect(buttonEl).toBeEnabled()
-    // })
-    // it("when input task is available and button event click change name button to element loading animation", async () => {
-    //     render(<Home />)
+        await waitFor(() => {
+            expect(screen.getByText('New Task Tester')).toBeInTheDocument();
+        }, { timeout: 5000 });
 
-    //     const buttonEl = screen.getByRole("button", { name: /add/i })
+        const searchInput = screen.getByPlaceholderText(/search task/i);
+        userEvent.type(searchInput, 'New Task Tester');
 
-    //     const handleClick = async () => {
-    //         screen.findByTestId("loader")
-    //     };
-
-    //     fireEvent.click(buttonEl, handleClick);
-
-    //     expect(buttonEl).toBeDisabled();
-    //     expect(screen.getByTestId('loader')).toBeInTheDocument();
-    // })
-    // it("when isLoading true, take element loader", async () => {
-    //     render(<Home />);
-
-    //     const isLoading = true;
-
-    //     const buttonEl = screen.getByText(''); // Anda dapat menyesuaikan dengan teks yang tepat pada tombol
-    //     expect(buttonEl.textContent).toBe(''); // Memastikan teks tombol adalah loader
-    // });
+        const newTodo = await screen.findByText('New Task Tester');
+        expect(newTodo).toBeInTheDocument();
+    });
 })

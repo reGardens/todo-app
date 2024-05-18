@@ -166,7 +166,7 @@ export default function Home() {
                 <div className="bg-white px-4 py-5 rounded-xl">
                     <ul className='grid gap-2'>
                         {filteredData.map((todo, index) => (
-                            <li key={index} role="listitem" className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
+                            <li key={index} className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
                                 <input className='!border-red-500 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
 
                                 <p>
@@ -175,10 +175,10 @@ export default function Home() {
                                 </p>
 
                                 <div className={`${todo.completed ? 'pointer-events-none' : ''} flex gap-2`}>
-                                    <button role="button" onClick={() => handleEditTodo(todo.id, todo.text)}>
+                                    <Button onClick={() => handleEditTodo(todo.id, todo.text)} aria-label="edit">
                                         <CreateIcon sx={{ fontSize: '1.2rem' }} />
-                                    </button>
-                                    <button onClick={() => handleDeleteTodo(todo.id)}>
+                                    </Button>
+                                    <button onClick={() => handleDeleteTodo(todo.id)} aria-label="delete">
                                         <DeleteIcon sx={{ fontSize: '1.2rem' }} />
                                     </button>
                                 </div>
