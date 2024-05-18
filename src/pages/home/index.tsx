@@ -66,10 +66,6 @@ export default function Home() {
                         setTodos([...todos, newTodo]);
                     }, 2000);
 
-                    // const tween = gsap.to('.li-trigger', { duration: 1, y: 0, opacity: 1 });
-                    // tl.add(tween)
-                    //     .add(tween);
-                    // tl.to('.li-trigger', { duration: 1, y: 0, opacity: 1 });
                 } catch (error) {
                     console.error('Error fetching time:', error);
                 }
@@ -142,10 +138,10 @@ export default function Home() {
                         value={inputText}
                         onChange={handleInputChange}
                         className='italic outline-none pl-4 pr-24 py-2 rounded-full w-full shadow-sm'
-                        placeholder='Add node'
+                        placeholder='Add note'
                     />
                     <Button onClick={handleAddTodo} className='!bg-red-400 !text-white !rounded-full !absolute !top-0 !right-0 !h-full !leading-none !normal-case w-20 !font-extrabold'>
-                        {isLoading ? <div className="loader"></div> : (editingId !== null ? 'Update' : 'Add')}
+                        {isLoading ? <div className="loader" data-testid="loader"></div> : (editingId !== null ? 'Update' : 'Add')}
                     </Button>
                 </div>
 
@@ -170,7 +166,7 @@ export default function Home() {
                 <div className="bg-white px-4 py-5 rounded-xl">
                     <ul className='grid gap-2'>
                         {filteredData.map((todo, index) => (
-                            <li key={index} className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
+                            <li key={index} role="listitem" className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
                                 <input className='!border-red-500 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
 
                                 <p>
@@ -179,7 +175,7 @@ export default function Home() {
                                 </p>
 
                                 <div className={`${todo.completed ? 'pointer-events-none' : ''} flex gap-2`}>
-                                    <button onClick={() => handleEditTodo(todo.id, todo.text)}>
+                                    <button role="button" onClick={() => handleEditTodo(todo.id, todo.text)}>
                                         <CreateIcon sx={{ fontSize: '1.2rem' }} />
                                     </button>
                                     <button onClick={() => handleDeleteTodo(todo.id)}>
