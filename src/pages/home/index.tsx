@@ -41,6 +41,7 @@ export default function Home() {
                         icon: "success"
                     });
                     setTodos(updatedTodos);
+                    setInputText('');
                 }, 2000);
                 setEditingId(null);
             } else {
@@ -59,15 +60,19 @@ export default function Home() {
                         searchValue: searchValueText,
                     };
                     setTimeout(() => {
+                        Swal.fire({
+                            title: "Create!",
+                            text: "Your task has been create.",
+                            icon: "success"
+                        });
                         setTodos([...todos, newTodo]);
+                        setInputText('');
                     }, 2000);
 
                 } catch (error) {
                     console.error('Error fetching time:', error);
                 }
             }
-
-            setInputText('');
 
             setTimeout(() => {
                 setIsLoading(false);
@@ -95,12 +100,14 @@ export default function Home() {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                setTodos(updatedTodos);
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your task has been deleted.",
-                    icon: "success"
-                });
+                setTimeout(() => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your task has been deleted.",
+                        icon: "success"
+                    });
+                    setTodos(updatedTodos);
+                }, 2000);
             }
         });
     };

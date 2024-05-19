@@ -1,4 +1,3 @@
-import React from 'react';
 import Button from '@mui/material/Button';
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,7 +19,7 @@ interface Props {
 export default function TodoItem({ todo, handleEditTodo, handleDeleteTodo, handleToggleComplete }: Props) {
     return (
         <li className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
-            <input className='!border-red-500 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
+            <input className='!border-red-400 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
 
             <p>
                 <span className={`font-extrabold`}>{todo.text}</span>
@@ -28,12 +27,12 @@ export default function TodoItem({ todo, handleEditTodo, handleDeleteTodo, handl
             </p>
 
             <div className={`${todo.completed ? 'pointer-events-none' : ''} flex gap-2`}>
-                <Button onClick={() => handleEditTodo(todo.id, todo.text)} aria-label="edit">
-                    <CreateIcon sx={{ fontSize: '1.2rem' }} />
+                <Button onClick={() => handleEditTodo(todo.id, todo.text)} aria-label="edit" className='!min-w-1'>
+                    <CreateIcon sx={{ fontSize: '1.2rem', color: 'black' }} />
                 </Button>
-                <button onClick={() => handleDeleteTodo(todo.id)} aria-label="delete">
-                    <DeleteIcon sx={{ fontSize: '1.2rem' }} />
-                </button>
+                <Button onClick={() => handleDeleteTodo(todo.id)} aria-label="delete" className='!min-w-1'>
+                    <DeleteIcon sx={{ fontSize: '1.2rem', color: 'black' }} />
+                </Button>
             </div>
         </li>
     );
