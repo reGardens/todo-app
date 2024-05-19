@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import Layout from '../Layout';
-import Button from '@mui/material/Button';
-import CreateIcon from '@mui/icons-material/Create';
-import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-import Swal from 'sweetalert2'
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
+import Swal from 'sweetalert2';
+import Layout from '../Layout';
+import InputTodo from '../../components/InputTodo';
+import SearchTodo from '../../components/SearchTodo';
+import TodoList from '../../components/TodoList';
 
 interface Todo {
     id: number;
@@ -19,18 +15,18 @@ interface Todo {
 }
 
 export default function Home() {
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [todos, setTodos] = useState<Todo[]>([]);
     const [inputText, setInputText] = useState<string>('');
     const [editingId, setEditingId] = useState<number | null>(null);
-    const [searchValueText, setSearchValueText] = useState("");
-    // const tl = gsap.timeline();
+    const [searchValueText, setSearchValueText] = useState('');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(event.target.value);
     };
 
     const handleAddTodo = async () => {
+        // Logika untuk menambah todo
         if (!isLoading && inputText.trim() !== '') {
             setIsLoading(true);
             if (editingId !== null) {
@@ -79,7 +75,14 @@ export default function Home() {
         }
     };
 
+    const handleEditTodo = (id: number, text: string) => {
+        // Logika untuk mengedit todo
+        setEditingId(id);
+        setInputText(text);
+    };
+
     const handleDeleteTodo = (id: number) => {
+        // Logika untuk menghapus todo
         const updatedTodos = todos.filter(todo => todo.id !== id);
 
         Swal.fire({
@@ -102,12 +105,8 @@ export default function Home() {
         });
     };
 
-    const handleEditTodo = (id: number, text: string) => {
-        setEditingId(id);
-        setInputText(text);
-    };
-
     const handleToggleComplete = (id: number) => {
+        // Logika untuk menandai todo selesai
         const updatedTodos = todos.map(todo =>
             todo.id === id ? { ...todo, completed: !todo.completed } : todo
         );
@@ -115,8 +114,8 @@ export default function Home() {
     };
 
     const searchHandlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchValueText(e.target.value)
-    }
+        setSearchValueText(e.target.value);
+    };
 
     const filteredData = todos.filter((el) => {
         if (searchValueText === '') {
@@ -125,67 +124,26 @@ export default function Home() {
         else {
             return el.text.toLowerCase().includes(searchValueText)
         }
-    })
+    });
 
     return (
         <Layout>
             <div className=''>
                 <p className='text-center font-bold text-2xl mt-8 mb-5'>To Do List</p>
-
-                <div className="flex justify-center relative mb-5">
-                    <input
-                        type="text"
-                        value={inputText}
-                        onChange={handleInputChange}
-                        className='italic outline-none pl-4 pr-24 py-2 rounded-full w-full shadow-sm'
-                        placeholder='Add note'
-                    />
-                    <Button onClick={handleAddTodo} className='!bg-red-400 !text-white !rounded-full !absolute !top-0 !right-0 !h-full !leading-none !normal-case w-20 !font-extrabold'>
-                        {isLoading ? <div className="loader" data-testid="loader"></div> : (editingId !== null ? 'Update' : 'Add')}
-                    </Button>
-                </div>
-
-                <div className="flex justify-end">
-                    <Paper
-                        component="form"
-                        sx={{ display: 'flex', alignItems: 'right', alignSelf: 'right' }}
-                        className='mb-5 !shadow-sm !rounded-full !px-2 !py-1 !w-[2.7rem] hover:!w-[10rem] !transition-all !duration-1000 !relative'
-                    >
-                        <InputBase
-                            sx={{ ml: 1, flex: 1 }}
-                            placeholder="Search Task"
-                            className='!pr-8 !text-wrap'
-                            onChange={searchHandlerChange}
-                        />
-                        <IconButton type="button" className='!absolute !top-0 !right-0 !bg-white' aria-label="search">
-                            <SearchIcon />
-                        </IconButton>
-                    </Paper>
-                </div>
-
-                <div className="bg-white px-4 py-5 rounded-xl">
-                    <ul className='grid gap-2'>
-                        {filteredData.map((todo, index) => (
-                            <li key={index} className={`li-trigger ${todo.completed ? 'opacity-25' : ''} flex justify-between items-center bg-slate-200 rounded-full px-4 py-2`}>
-                                <input className='!border-red-500 !rounded-full' type="checkbox" onClick={() => handleToggleComplete(todo.id)} name="" id="" />
-
-                                <p>
-                                    <span className={`font-extrabold`}>{todo.text}</span>
-                                    <span className='text-xs'> ({todo.time})</span>
-                                </p>
-
-                                <div className={`${todo.completed ? 'pointer-events-none' : ''} flex gap-2`}>
-                                    <Button onClick={() => handleEditTodo(todo.id, todo.text)} aria-label="edit">
-                                        <CreateIcon sx={{ fontSize: '1.2rem' }} />
-                                    </Button>
-                                    <button onClick={() => handleDeleteTodo(todo.id)} aria-label="delete">
-                                        <DeleteIcon sx={{ fontSize: '1.2rem' }} />
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <InputTodo
+                    isLoading={isLoading}
+                    inputText={inputText}
+                    handleInputChange={handleInputChange}
+                    handleAddTodo={handleAddTodo}
+                    editingId={editingId}
+                />
+                <SearchTodo searchHandlerChange={searchHandlerChange} />
+                <TodoList
+                    todos={filteredData}
+                    handleEditTodo={handleEditTodo}
+                    handleDeleteTodo={handleDeleteTodo}
+                    handleToggleComplete={handleToggleComplete}
+                />
             </div>
         </Layout>
     );

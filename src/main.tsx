@@ -8,11 +8,16 @@ import Home from './pages/home/index.tsx';
 import "./styles/index.css"
 import { Provider } from 'react-redux'
 import { store } from './app/store.tsx';
+import IntegrasiHome from './pages/Home/index.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/integrasi-home",
+    element: <IntegrasiHome />,
   },
 ]);
 

@@ -1,10 +1,10 @@
 import { ReactNode } from "react"
 
-interface LayoutProps {
+interface Props {
   children: ReactNode
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children }: Props) {
   return (
     <>
       <main className="max-w-screen-sm mx-auto">
