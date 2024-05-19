@@ -26,7 +26,7 @@ export default function Home() {
     };
 
     const handleAddTodo = async () => {
-        // Logika untuk menambah todo
+        // Logic to add todo
         if (!isLoading && inputText.trim() !== '') {
             setIsLoading(true);
             if (editingId !== null) {
@@ -76,13 +76,13 @@ export default function Home() {
     };
 
     const handleEditTodo = (id: number, text: string) => {
-        // Logika untuk mengedit todo
+        // Logic to edit todo
         setEditingId(id);
         setInputText(text);
     };
 
     const handleDeleteTodo = (id: number) => {
-        // Logika untuk menghapus todo
+        // Logic to delete todo
         const updatedTodos = todos.filter(todo => todo.id !== id);
 
         Swal.fire({
@@ -106,7 +106,7 @@ export default function Home() {
     };
 
     const handleToggleComplete = (id: number) => {
-        // Logika untuk menandai todo selesai
+        // Logic to mark todo as completed
         const updatedTodos = todos.map(todo =>
             todo.id === id ? { ...todo, completed: !todo.completed } : todo
         );
