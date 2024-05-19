@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasio Elemen Positif, Negatif, dan Nol</title>
+</head>
+
+<body>
+    <h1>Rasio Elemen Positif, Negatif, dan Nol dalam Array</h1>
+
+    <p>Hasil rasio elemen-elemen dalam array:</p>
+    <div id="result"></div>
+
+    <script>
+        function positiveNegativeZero(arr) {
+            let len = arr.length;
+
+            let positiveCount = 0;
+            let negativeCount = 0;
+            let zeroCount = 0;
+
+            for (let i = 0; i < len; i++) {
+                if (arr[i] > 0) {
+                    positiveCount++;
+                } else if (arr[i] < 0) {
+                    negativeCount++;
+                } else if (arr[i] === 0) {
+                    zeroCount++;
+                }
+            }
+
+            document.getElementById("result").innerHTML += "<p>Rasio elemen positif: " + (positiveCount / len).toFixed(4) + "</p>";
+            document.getElementById("result").innerHTML += "<p>Rasio elemen negatif: " + (negativeCount / len).toFixed(4) + "</p>";
+            document.getElementById("result").innerHTML += "<p>Rasio elemen nol: " + (zeroCount / len).toFixed(4) + "</p>";
+        }
+
+        // Uji 1:
+        let a1 = [2, -1, 5, 6, 0, -3];
+        document.write("<b>Kasus Uji 1:</b><br>");
+        positiveNegativeZero(a1);
+
+        // Uji 2:
+        let a2 = [4, 0, -2, -9, -7, 1];
+        document.write("<b>Kasus Uji 2:</b><br>");
+        positiveNegativeZero(a2);
+    </script>
+</body>
+
+</html>

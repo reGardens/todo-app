@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konversi Format Waktu 12 Jam ke Format 24 Jam</title>
+</head>
+
+<body>
+    <h1>Konversi Format Waktu 12 Jam ke Format 24 Jam</h1>
+    <p id="result"></p>
+
+    <script>
+        function print24(str) {
+            // Ambil jam
+            var h1 = Number(str[1] - '0');
+            var h2 = Number(str[0] - '0');
+            var hh = (h2 * 10 + h1 % 10);
+
+            // IF "AM"
+            if (str[8] == 'A') {
+                if (hh == 12) {
+                    document.getElementById("result").innerHTML = "00" + str.substring(2, 8);
+                } else {
+                    document.getElementById("result").innerHTML = str.substring(0, 8);
+                }
+            }
+
+            // IF "PM"
+            else {
+                if (hh == 12) {
+                    document.getElementById("result").innerHTML = "12" + str.substring(2, 8);
+                } else {
+                    hh = hh + 12;
+                    document.getElementById("result").innerHTML = hh + str.substring(2, 8);
+                }
+            }
+        }
+
+        var str = "07:05:45PM";
+        print24(str);
+    </script>
+</body>
+
+</html>

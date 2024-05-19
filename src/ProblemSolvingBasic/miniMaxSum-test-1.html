@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiniMaxSum</title>
+</head>
+
+<body>
+  <input type="text" id="input" placeholder="Masukkan lima bilangan bulat dipisahkan oleh spasi" />
+  <button onclick="calculate()">Hitung</button>
+  <p id="output"></p>
+
+  <script>
+    function miniMaxSum(input) {
+      const arr = input.split(" ").map(Number);
+      const sum = arr.reduce((acc, val) => acc + val, 0);
+      document.getElementById("output").innerText = `Hasil: ${sum}`;
+    }
+
+    function calculate() {
+      const input = document.getElementById("input").value;
+      miniMaxSum(input);
+    }
+  </script>
+</body>
+
+</html>
